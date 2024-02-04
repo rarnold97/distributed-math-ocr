@@ -1,0 +1,4 @@
+[submodule "extern/LaTeX-OCR"]
+	path = extern/LaTeX-OCR
+	url = https://github.com/lukas-blecher/LaTeX-OCR.git
+	branch = 0.0.31

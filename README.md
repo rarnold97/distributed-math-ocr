@@ -7,7 +7,7 @@
 | Protobuf | RPC |
 | Mongo | Database (store image entries with equations formatted) |
 | C++ | ML/OCR |
-| Jinja | web frontends |
+| streamlint | web applications |
 | LaTex | mathematical Rendering |
 | HTML | render latex equations |
 | Docker | For Service Abstractions |
