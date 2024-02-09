@@ -1,0 +1,11 @@
+
+syntax = "proto3";
+
+package equation_image_to_latex;
+
+message Equation {
+    string latex_str=1;
+    uint64 uid=2;
+    uint64 page_str_id=3;
+    uint64 section_str_id=4;
+}

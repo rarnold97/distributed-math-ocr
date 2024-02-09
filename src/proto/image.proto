@@ -3,7 +3,7 @@ syntax = "proto3";
 package equation_image_to_latex;
 
 message Image {
-    string filepath = 1;
+    uint64 uid = 1;
 
     enum EquationType {
         DIGITAL = 0;
@@ -12,7 +12,6 @@ message Image {
     }
 
     EquationType equationType = 2;
-    int64 id = 3; // can be used to query from database
 }
 
 message ImageStack{

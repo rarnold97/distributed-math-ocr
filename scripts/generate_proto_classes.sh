@@ -9,8 +9,10 @@ proto_names=()
 
 for file in "${proto_files[@]}"; do
     proto_names+=$(basename "$file")
+    proto_names+=" "
 done
+echo ${proto_names}
 
-protoc --python_out="$ROOT_DIR/src/proto/classes" --proto_path="$ROOT_DIR/src/proto" "${proto_names[@]}"
-protol --create-package --in-place --python-out "$ROOT_DIR/src/proto/classes" \
-    protoc --proto-path="$ROOT_DIR/src/proto" "${proto_names[@]}"
+protoc --python_out=$ROOT_DIR/src/proto/classes --proto_path=$ROOT_DIR/src/proto ${proto_names[@]}
+protol --create-package --in-place --python-out $ROOT_DIR/src/proto/classes \
+    protoc --proto-path=$ROOT_DIR/src/proto ${proto_names[@]}
