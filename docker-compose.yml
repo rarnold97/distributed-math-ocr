@@ -1,0 +1,23 @@
+version: "3.2"
+services:
+  rabbitmq:
+    image: rabbitmq-mathclip
+    build:
+      context: .
+      dockerfile: ./docker/rabbitmq.Dockerfile
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    environment:
+      - RABBITMQ_USER=admin
+      - RABBITMQ_PASSWORD=admin
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - rabbitmq_network
+
+networks:
+  rabbitmq_network:
+    driver: bridge
