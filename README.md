@@ -6,13 +6,11 @@
 | --- | --- |
 | Protobuf | RPC |
 | Mongo | Database (store image entries with equations formatted) |
-| C++ | ML/OCR |
+| Python | ML/OCR |
 | streamlint | web applications |
 | LaTex | mathematical Rendering |
 | HTML | render latex equations |
 | Docker | For Service Abstractions |
 | Kubernetes | Service Scaling / Distributed Optimization |
 | Python | Middleware Programming |
-| Rabbit MQ | Message Broker |
-
-## Streamlit
+| Rabbit MQ / C++ | Message Broker |
