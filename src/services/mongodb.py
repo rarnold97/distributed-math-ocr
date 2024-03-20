@@ -5,6 +5,7 @@ import os
 from pprint import pprint
 from datetime import datetime
 from typing import List, Any
+import enum
 
 from bson.objectid import ObjectId
 from pymongo import MongoClient
@@ -55,12 +56,17 @@ class MathclipsDatabase:
         insert_result = self.collection.insert_many([asdict(record) for record in records])
         assert insert_result
 
+class EquationOriginationType(enum.IntEnum):
+    DIGITAL = 0
+    HANDWRITTEN = 1
+    
 @dataclass
 class MathSymbolImageRecord:
     image_filename: str|None = None
     processed: bool|None = None
     trained: bool|None = None
     is_correct: bool|None = None
+    equation_type: EquationOriginationType|None = None
     latex_label: str|None = None
     
     def as_intersection_query_filter(self, uid: int|bytes|None = None)->dict:
@@ -73,10 +79,13 @@ class MathSymbolImageDatabase(MathclipsDatabase):
     
     def intersection_query(self, uid: int|None = None, image_filename: str|None = None,
                     processed: bool|None = None, trained: bool|None = None,
-                    is_correct: bool|None = None, latex_label: str|None = None) -> dict:
+                    is_correct: bool|None = None,
+                    equation_type: EquationOriginationType|None = None,
+                    latex_label: str|None = None) -> dict:
         record = MathSymbolImageRecord(
             image_filename=image_filename, processed = processed,
-            trained = trained, is_correct = is_correct, latex_label = latex_label)
+            trained = trained, is_correct = is_correct,
+            equation_type = equation_type, latex_label = latex_label)
         return self.collection.find(record.as_intersection_query_filter(uid))
     
 @dataclass
