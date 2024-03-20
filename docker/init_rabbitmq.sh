@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Create Rabbitmq user
 ( rabbitmqctl wait --timeout 60 $RABBITMQ_PID_FILE ; \

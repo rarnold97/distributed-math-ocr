@@ -2,7 +2,7 @@ version: "3.2"
 
 services:
   rabbitmq:
-    image: rabbitmq-mathclip
+    image: rabbitmq-mathclip:latest
     build:
       context: .
       dockerfile: ./docker/rabbitmq.Dockerfile
@@ -57,8 +57,8 @@ services:
       - mathclips_mongo_data:/data/db
 
 volumes:
-  mathclips_mongo_volume
+  mathclips_mongo_data:
 
 networks:
+  default:
   rabbitmq_network:
-    driver: brversion: '3.7'
