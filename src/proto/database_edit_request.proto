@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package equation_image_to_latex;
+
+import "uint_packed_bytes.proto";
+
+message EditRequest {
+    UintPackedBytes result_db_id =1;
+    bool delete_entry = 2;
+    // in future iterations, more options should be offered.
+    // for a prototype, removing the entry and retraining is good enough.
+}

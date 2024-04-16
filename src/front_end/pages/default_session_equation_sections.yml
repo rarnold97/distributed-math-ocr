@@ -1,0 +1,53 @@
+Algebra:
+  Equation of Line:
+    author: User 2
+    db_id:
+      first_bits: 1
+      last_bits: 2
+    latex: y = mx + b
+  Equation of Quadratic:
+    author: User 2
+    db_id:
+      first_bits: 1
+      last_bits: 3
+    latex: y = ax^2 + bx + c
+  Exponent:
+    author: Ryan Arnold
+    db_id:
+      first_bits: 7358589156019610454
+      last_bits: 3466902236
+    latex: \gamma\colon\mathbf{e}^{\varepsilon}
+Signal Processing:
+  Euler Identity:
+    author: User 1
+    db_id:
+      first_bits: 1
+      last_bits: 4
+    latex: e^{i\pi} + 1 = 0
+  Fourier Transform:
+    author: Ryan Arnold
+    db_id:
+      first_bits: 7358567021201505451
+      last_bits: 693416579
+    latex: '{\widehat{f}}\left(\xi\right)=\int_{-\infty}^{\infty}f(x)\ e^{-i2\pi\xi
+      x}\,d x.'
+Test:
+  Angular Velocity:
+    author: Lance Sanchez
+    db_id:
+      first_bits: 7358531952799567390
+      last_bits: 3203838701
+    latex: '{\boldsymbol{\omega}}={\frac{\mathbf{r}\times\mathbf{v}}{r^{2}}}'
+  Moment of Inertia:
+    author: Ryan Arnold
+    db_id:
+      first_bits: 7358530797453364766
+      last_bits: 3203838700
+    latex: '{\bf L}=L_{1}{\bf e}_{1}+L_{2}{\bf e}_{2}+L_{3}{\bf e}_{3}=\sum_{i=1}^{3}I_{i}{\omega}_{i}{\bf
+      e}_{i}'
+  retrain_test:
+    author: Ryan Arnold
+    db_id:
+      first_bits: 7358559168197846523
+      last_bits: 3147350525
+    latex: \partial_{\mu}(H^{\mu\nu}-e j^{\mu}x^{\nu})=0.

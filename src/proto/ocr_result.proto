@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package equation_image_to_latex;
+
+import "image.proto";
+import "uint_packed_bytes.proto";
+
+message OCR_Result
+{
+    UintPackedBytes uid = 1;
+    string latex = 2;
+    Image input_image_data = 3;
+}

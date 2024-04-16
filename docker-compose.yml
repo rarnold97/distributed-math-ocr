@@ -21,7 +21,7 @@ services:
 
   mongodb:
     image: mongo
-    container_name: mongodb
+    container_name: mongodb-mathclips
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
@@ -40,7 +40,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      ME_CONFIG_MONGODB_SERVER: mongodb-isar
+      ME_CONFIG_MONGODB_SERVER: mongodb-mathclips
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: admin123
       ME_CONFIG_MONGODB_ENABLE_ADMIN: true

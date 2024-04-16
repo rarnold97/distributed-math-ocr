@@ -2,8 +2,10 @@ syntax = "proto3";
 
 package equation_image_to_latex;
 
+import "uint_packed_bytes.proto";
+
 message Image {
-    uint64 uid = 1;
+    UintPackedBytes uid = 1;
 
     enum EquationType {
         DIGITAL = 0;
@@ -12,6 +14,10 @@ message Image {
     }
 
     EquationType equationType = 2;
+
+    string equation_name = 3;
+    string author = 4;
+    string parent_section = 5;
 }
 
 message ImageStack{

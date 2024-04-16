@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package equation_image_to_latex;
+
+message UintPackedBytes {
+    uint64 first_bits = 1;
+    uint32 last_bits = 2;
+}

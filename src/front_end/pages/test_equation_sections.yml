@@ -1,0 +1,20 @@
+Algebra:
+  Equation of Line:
+    latex: "y = mx + b"
+    author: "User 2"
+    db_id:
+      first_bits: 1
+      last_bits: 2
+  Equation of Quadratic:
+    latex: "y = ax^2 + bx + c"
+    author: "User 2"
+    db_id:
+      first_bits: 1
+      last_bits: 3
+Signal Processing:
+  Euler Identity:
+    author: User 1
+    latex: e^{i\pi} + 1 = 0
+    db_id:
+      first_bits: 1
+      last_bits: 4

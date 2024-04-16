@@ -1,0 +1,11 @@
+
+syntax = "proto3";
+
+package equation_image_to_latex;
+
+import "uint_packed_bytes.proto";
+
+message TrainRequest {
+    UintPackedBytes result_uid=1;
+    string latex_str=2;
+}
