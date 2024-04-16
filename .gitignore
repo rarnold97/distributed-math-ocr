@@ -1,6 +1,8 @@
 .cs7830_venv/*
 .vscode/*
-data/*
+data/chrome_images
+data/handwritten_extracted_images
+data/im2latex
 literature/*
 **/*.pyc
 **/*.log
