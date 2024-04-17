@@ -31,12 +31,30 @@ Signal Processing:
       last_bits: 693416579
     latex: '{\widehat{f}}\left(\xi\right)=\int_{-\infty}^{\infty}f(x)\ e^{-i2\pi\xi
       x}\,d x.'
+  In Phase Component:
+    author: Docker User
+    db_id:
+      first_bits: 7358731919034847880
+      last_bits: 3967489252
+    latex: \cos(2\pi f t)\cdot A(t)\cos[\varphi(t)]
   Narrowband Signal:
     author: Linux User
     db_id:
       first_bits: 7358643764714721237
       last_bits: 1759304080
     latex: A(t)\cdot\cos[2\pi f t+\varphi(t)]
+  Quadrature:
+    author: Docker User
+    db_id:
+      first_bits: 7358724394252145288
+      last_bits: 3967489251
+    latex: \sin(2\pi f t)\cdot A(t)\sin[\varphi(t)]
+  Quadrature Component:
+    author: Docker User
+    db_id:
+      first_bits: 7358722796349655890
+      last_bits: 4119812618
+    latex: \sin(2\pi f t)\cdot A(t)\sin[\varphi(t)]
 Test:
   Angular Velocity:
     author: Lance Sanchez

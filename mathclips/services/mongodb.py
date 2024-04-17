@@ -79,8 +79,8 @@ class MathclipsDatabase:
 
         if db is None:
             mongo_port = os.environ.get('MONGO_PORT', int(27017))
-            #mongo_url = f"mongodb://localhost:{mongo_port}/"
-            mongo_client = MongoClient(host = MONGO_DOCKER_IP, port = mongo_port,
+            mongo_url = f"mongodb://{MONGO_DOCKER_IP}:{mongo_port}/"
+            mongo_client = MongoClient(mongo_url,
                                     username="admin",
                                     password="admin123")
             self.db = mongo_client["mathclips_data"]

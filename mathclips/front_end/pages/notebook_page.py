@@ -22,11 +22,12 @@ from mathclips.proto.pb_py_classes.image_pb2 import Image as ProtoImage
 from mathclips.proto.pb_py_classes.ocr_result_pb2 import OCR_Result
 from mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes as UintPacked
 from mathclips.proto.pb_py_classes.train_pb2 import TrainRequest
+import mathclips
 
 IdType: TypeAlias = str | int
 
-default_config_filename = Path(__file__).parent.resolve() / default_result_config_filename
-
+default_config_filename = Path(mathclips.__path__[0]).resolve() \
+    / "front_end" / "pages" / default_result_config_filename
 st.set_page_config("Math Equation Notebook", page_icon = "static/mathclips_logo_small.png")
 
 @st.cache_resource

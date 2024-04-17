@@ -71,17 +71,16 @@ services:
     image: mathclips:latest
     container_name: mathclips_streamlit_frontend
     restart: always
+    working_dir: /opt/project/mathclips/front_end
     ports:
       - 8501:8501
     volumes:
-      - ./mathclips/services/front_end/.streamlit:/opt/project/mathclips/services/front_end/.streamlit
-      - ./mathclips/services/__init__.py:/opt/project/mathclips/services/__init__.py
-      - ./mathclips/services/rmq.py:/opt/project/mathclips/services/rmq.py
+      - ./mathclips/front_end/pages/notebook_page.py:/opt/project/mathclips/front_end/pages/notebook_page.py
+      - ./mathclips/front_end/pages/default_session_equation_sections.yml:/usr/local/lib/python3.10/site-packages/mathclips/front_end/pages/default_session_equation_sections.yml
     networks:
       frontend_network:
       backend_network:
-    command:
-      - run_frontend
+    entrypoint: ["python", "-m", "streamlit", "run", "/opt/project/mathclips/front_end/app.py"]
 
   ingest:
     build:
@@ -92,8 +91,8 @@ services:
     container_name: mathclips_ingest_service
     restart: always
     volumes:
-      - ./mathclips/services/__init__.py:/opt/project/mathclips/services/__init__.py
-      - ./mathclips/services/rmq.py:/opt/project/mathclips/services/rmq.py
+      - .:/opt/project/
+      - ./mathclips/services:/usr/local/lib/python3.10/site-packages/mathclips/services
     networks:
       backend_network:
     entrypoint: ["python", "-m", "mathclips.services.ingest"]
@@ -111,12 +110,7 @@ services:
       - ./mathclips/services:/usr/local/lib/python3.10/site-packages/mathclips/services
     networks:
       backend_network:
-    #entrypoint: ["python", "-m", "mathclips.services.image_to_equation_interface"]
-    entrypoint: ["python"]
-    command:
-      - from mathclips.services.image_to_equation_interface import main
-      - from mathclips.services import NUM_ML_PIPELINES
-      - main(NUM_ML_PIPELINES)
+    entrypoint: ["python", "-m", "mathclips.services.image_to_equation_interface"]
 
 volumes:
   mathclips_mongo_data:
@@ -130,7 +124,7 @@ networks:
           gateway: 172.16.0.1
 
   frontend_network:
-    driver: default
+    driver: bridge
     ipam:
       config:
         - subnet: 172.19.0.0/16

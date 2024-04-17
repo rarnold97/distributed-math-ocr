@@ -5,8 +5,6 @@ import multiprocessing
 from pathlib import Path
 
 from PIL import Image
-import pika.channel
-import pika.connection
 import pix2tex
 from pix2tex.cli import LatexOCR
 import pika
@@ -121,7 +119,7 @@ class MLPipelineInterface:
 
     def __enter__(self) -> MLPipelineInterface:
         self.rmq_connection = pika.BlockingConnection(
-            get_rmq_connection_parameters(localmode = LOCAL_MODE))
+            get_rmq_connection_parameters(LOCAL_MODE))
         self.rmq_channel = self.rmq_connection.channel()
         self.rmq_channel.queue_declare(queue = IngestQueueNames.RESULT_QUEUE, durable = True)
         return self
@@ -136,16 +134,16 @@ class MLPipelineInterface:
                 routing_key = IngestQueueNames.RESULT_QUEUE,
                 properties = pika.BasicProperties(delivery_mode = pika.DeliveryMode.Persistent),
                 body = result.SerializeToString())
-            logger.info(f"Sent ML OCR result to ingest queue. Message contents:\n{result}")
+            print(f"Sent ML OCR result to ingest queue. Message contents:\n{result}")
         else:
             logger.warning("Cannot Establish RabbitMQ connection to Ingest Service(s)!")
 
 def ml_worker():
 
-    ml_pipeline_interface = MLPipelineInterface()
-
     def ml_pipeline_callback(channel: Channel, method: DeliveryProperties,
                              properties: BasicProperties, body: bytes):
+
+        ml_pipeline_interface = MLPipelineInterface()
         # we are assuming that the image class is stored in its own database, and accessible via its uid property
         image_message = ImageProto.FromString(body)
         print(f"Running ML Pipeline for: {image_message.equation_name}. MESSAGE:\n{image_message}")
@@ -165,9 +163,8 @@ def ml_worker():
             logger.warning(f"Was unable to generate a latex equaion for: {image_message.equation_name}")
 
         channel.basic_ack(delivery_tag = method.delivery_tag)
-
     connection = pika.BlockingConnection(
-        get_rmq_connection_parameters(localmode = LOCAL_MODE))
+        get_rmq_connection_parameters(LOCAL_MODE))
     channel = connection.channel()
     channel.queue_declare(queue = IngestQueueNames.ML_PIPELINE_QUEUE, durable = True)
     print(" [*] Waiting for Messages, CTRL+C to quit.")
@@ -178,18 +175,16 @@ def ml_worker():
     channel.start_consuming()
 
 
+def ml_worker_factory() -> multiprocessing.Process:
+    worker_process = multiprocessing.Process(target = ml_worker, name = "ml_pipeline_worker")
+    worker_process.start()
+    return worker_process
 
-def main(num_workers: int):
-    def ml_worker_factory() -> multiprocessing.Process:
-        worker_process = multiprocessing.Process(target = ml_worker, name = "ml_pipeline_worker")
-        worker_process.start()
-        return worker_process
-
-    processes = [ml_worker_factory() for _ in range(num_workers)]
+def main():
+    from mathclips.services import NUM_ML_PIPELINES
+    processes = [ml_worker_factory() for _ in range(NUM_ML_PIPELINES)]
     for process in processes:
         process.join()
 
 if __name__ == "__main__":
-    from mathclips.services import NUM_ML_PIPELINES
-    main(num_workers = NUM_ML_PIPELINES)
-    #ml_worker()
+    main()

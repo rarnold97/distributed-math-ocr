@@ -25,7 +25,7 @@ def get_rmq_connection_parameters(localmode: bool = False) -> pika.ConnectionPar
 
 def publish_proto_message(message: Message, queue_name: str):
     connection: Connection = pika.BlockingConnection(
-        get_rmq_connection_parameters(LOCAL_MODE))
+        get_rmq_connection_parameters(True))
     channel: Channel = connection.channel()
     channel.queue_declare(queue = queue_name, durable = True)
     channel.basic_publish(
