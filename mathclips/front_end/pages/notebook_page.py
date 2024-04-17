@@ -13,15 +13,15 @@ import pymongo
 from pymongo.database import Database
 from munch import Munch
 
-from services.rmq import publish_proto_message
-from services import IngestQueueNames
-from services.ingest import default_result_config_filename
-from services.logger import logger
-from services.mongodb import MathSymbolResultDatabase
-from proto.pb_py_classes.image_pb2 import Image as ProtoImage
-from proto.pb_py_classes.ocr_result_pb2 import OCR_Result
-from proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes as UintPacked
-from proto.pb_py_classes.train_pb2 import TrainRequest
+from mathclips.services.rmq import publish_proto_message
+from mathclips.services import IngestQueueNames
+from mathclips.services.ingest import default_result_config_filename
+from mathclips.services.logger import logger
+from mathclips.services.mongodb import MathSymbolResultDatabase
+from mathclips.proto.pb_py_classes.image_pb2 import Image as ProtoImage
+from mathclips.proto.pb_py_classes.ocr_result_pb2 import OCR_Result
+from mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes as UintPacked
+from mathclips.proto.pb_py_classes.train_pb2 import TrainRequest
 
 IdType: TypeAlias = str | int
 

@@ -11,12 +11,12 @@ from pymongo.database import Database
 import gridfs
 from PIL import Image
 
-from services.mongodb import MathSymbolImageDatabase
+from mathclips.services.mongodb import MathSymbolImageDatabase
 #from services.logger import logger as LOGGER
-from proto.pb_py_classes.image_pb2 import Image as ProtoImage
-from proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes as UintPacked
-from services.rmq import publish_proto_message
-from services import IngestQueueNames
+from mathclips.proto.pb_py_classes.image_pb2 import Image as ProtoImage
+from mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes as UintPacked
+from mathclips.services.rmq import publish_proto_message
+from mathclips.services import IngestQueueNames
 
 @st.cache_resource
 def init_mongo_db_connection():

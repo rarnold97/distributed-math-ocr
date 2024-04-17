@@ -17,7 +17,8 @@ services:
         - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
         - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
     networks:
-        - rabbitmq_network
+      backend_network:
+        ipv4_address: 172.16.0.2
 
   mongodb:
     image: mongo
@@ -32,6 +33,9 @@ services:
       - "27017:27017"
     volumes:
       - mathclips_mongo_data:/data/db
+    networks:
+      backend_network:
+        ipv4_address: 172.16.0.3
 
   mongo-express:
     image: mongo-express
@@ -55,10 +59,79 @@ services:
       - mongodb
     volumes:
       - mathclips_mongo_data:/data/db
+    networks:
+      backend_network:
+        ipv4_address: 172.16.0.4
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/python_services.Dockerfile
+      target: mathclips-app
+    image: mathclips:latest
+    container_name: mathclips_streamlit_frontend
+    restart: always
+    ports:
+      - 8501:8501
+    volumes:
+      - ./mathclips/services/front_end/.streamlit:/opt/project/mathclips/services/front_end/.streamlit
+      - ./mathclips/services/__init__.py:/opt/project/mathclips/services/__init__.py
+      - ./mathclips/services/rmq.py:/opt/project/mathclips/services/rmq.py
+    networks:
+      frontend_network:
+      backend_network:
+    command:
+      - run_frontend
+
+  ingest:
+    build:
+      context: .
+      dockerfile: ./docker/python_services.Dockerfile
+      target: mathclips-app
+    image: mathclips:latest
+    container_name: mathclips_ingest_service
+    restart: always
+    volumes:
+      - ./mathclips/services/__init__.py:/opt/project/mathclips/services/__init__.py
+      - ./mathclips/services/rmq.py:/opt/project/mathclips/services/rmq.py
+    networks:
+      backend_network:
+    entrypoint: ["python", "-m", "mathclips.services.ingest"]
+
+  ml_pipeline:
+    build:
+      context: .
+      dockerfile: ./docker/python_services.Dockerfile
+      target: mathclips-app
+    image: mathclips:latest
+    container_name: mathclips_ml_pipeline_service
+    restart: always
+    volumes:
+      - .:/opt/project/
+      - ./mathclips/services:/usr/local/lib/python3.10/site-packages/mathclips/services
+    networks:
+      backend_network:
+    #entrypoint: ["python", "-m", "mathclips.services.image_to_equation_interface"]
+    entrypoint: ["python"]
+    command:
+      - from mathclips.services.image_to_equation_interface import main
+      - from mathclips.services import NUM_ML_PIPELINES
+      - main(NUM_ML_PIPELINES)
 
 volumes:
   mathclips_mongo_data:
 
 networks:
-  default:
-  rabbitmq_network:
+  backend_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24
+          gateway: 172.16.0.1
+
+  frontend_network:
+    driver: default
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+          gateway: 172.19.0.1

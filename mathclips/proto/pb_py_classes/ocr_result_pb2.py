@@ -12,8 +12,8 @@ from google.protobuf.internal import builder as _builder
 _sym_db = _symbol_database.Default()
 
 
-import proto.pb_py_classes.image_pb2 as image__pb2
-import proto.pb_py_classes.uint_packed_bytes_pb2 as uint__packed__bytes__pb2
+import mathclips.proto.pb_py_classes.image_pb2 as image__pb2
+import mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 as uint__packed__bytes__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10ocr_result.proto\x12\x17\x65quation_image_to_latex\x1a\x0bimage.proto\x1a\x17uint_packed_bytes.proto\"\x8c\x01\n\nOCR_Result\x12\x35\n\x03uid\x18\x01 \x01(\x0b\x32(.equation_image_to_latex.UintPackedBytes\x12\r\n\x05latex\x18\x02 \x01(\t\x12\x38\n\x10input_image_data\x18\x03 \x01(\x0b\x32\x1e.equation_image_to_latex.Imageb\x06proto3')

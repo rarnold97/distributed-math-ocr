@@ -12,7 +12,7 @@ from google.protobuf.internal import builder as _builder
 _sym_db = _symbol_database.Default()
 
 
-import proto.pb_py_classes.uint_packed_bytes_pb2 as uint__packed__bytes__pb2
+import mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 as uint__packed__bytes__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0bimage.proto\x12\x17\x65quation_image_to_latex\x1a\x17uint_packed_bytes.proto\"\xfb\x01\n\x05Image\x12\x35\n\x03uid\x18\x01 \x01(\x0b\x32(.equation_image_to_latex.UintPackedBytes\x12\x41\n\x0c\x65quationType\x18\x02 \x01(\x0e\x32+.equation_image_to_latex.Image.EquationType\x12\x15\n\requation_name\x18\x03 \x01(\t\x12\x0e\n\x06\x61uthor\x18\x04 \x01(\t\x12\x16\n\x0eparent_section\x18\x05 \x01(\t\"9\n\x0c\x45quationType\x12\x0b\n\x07\x44IGITAL\x10\x00\x12\x0f\n\x0bHANDWRITTEN\x10\x01\x12\x0b\n\x07UNKNOWN\x10\x02\"<\n\nImageStack\x12.\n\x06images\x18\x01 \x03(\x0b\x32\x1e.equation_image_to_latex.Imageb\x06proto3')

@@ -13,9 +13,10 @@ from pymongo.results import InsertManyResult, InsertOneResult
 import gridfs
 from PIL import Image
 
-from proto.pb_py_classes.image_pb2 import Image as ProtoImage
-from proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes
-from services.util import object_id_from_packed, packed_from_object_id
+from mathclips.services import MONGO_DOCKER_IP
+from mathclips.proto.pb_py_classes.image_pb2 import Image as ProtoImage
+from mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes
+from mathclips.services.util import object_id_from_packed, packed_from_object_id
 
 def dict_to_intersection_query(dictionary: dict, uid: UintPackedBytes|bytes|None = None) -> dict:
     query_list = [{key: value} for key, value in dictionary.items() if value is not None]
@@ -78,8 +79,8 @@ class MathclipsDatabase:
 
         if db is None:
             mongo_port = os.environ.get('MONGO_PORT', int(27017))
-            mongo_url = f"mongodb://localhost:{mongo_port}/"
-            mongo_client = MongoClient(mongo_url,
+            #mongo_url = f"mongodb://localhost:{mongo_port}/"
+            mongo_client = MongoClient(host = MONGO_DOCKER_IP, port = mongo_port,
                                     username="admin",
                                     password="admin123")
             self.db = mongo_client["mathclips_data"]

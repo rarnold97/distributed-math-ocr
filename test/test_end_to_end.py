@@ -2,10 +2,10 @@ from pathlib import Path
 
 import numpy as np
 
-from proto.pb_py_classes.image_pb2 import Image as ProtoImage
-from proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes
-from services.mongodb import MathSymbolImageDatabase
-from services.image_to_equation_interface import Interface_IPC
+from mathclips.proto.pb_py_classes.image_pb2 import Image as ProtoImage
+from mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes
+from mathclips.services.mongodb import MathSymbolImageDatabase
+from mathclips.services.image_to_equation_interface import Interface_IPC
 
 root_path = Path(__file__).parent.parent.resolve()
 

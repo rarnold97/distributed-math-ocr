@@ -23,27 +23,28 @@ from PIL import Image
 from munch import Munch
 DeliveryProperties: TypeAlias = Basic.Deliver
 
-from services import (MIN_TRAIN_BATCH_SIZE, NUM_TRAIN_WORKERS,
+from mathclips.services import (MIN_TRAIN_BATCH_SIZE, NUM_TRAIN_WORKERS,
                       NUM_RESULT_WORKERS, IngestQueueNames)
-from services.logger import logger
-from services.rmq import get_rmq_connection_parameters
-from services.util import (object_id_from_packed, packed_from_object_id,
+from mathclips.services.logger import logger
+from mathclips.services.rmq import get_rmq_connection_parameters
+from mathclips.services.util import (object_id_from_packed, packed_from_object_id,
                            find_newest_file, update_nested_dict)
-from services.mongodb import (MathSymbolImageDatabase, MLCheckpointDatabase,
+from mathclips.services.mongodb import (MathSymbolImageDatabase, MLCheckpointDatabase,
                               MathSymbolResultDatabase, MathEquationResultRecord)
-from services.image_to_equation_interface import MLPipelineInterface
-from proto.pb_py_classes.ocr_result_pb2 import OCR_Result
-from proto.pb_py_classes.train_pb2 import TrainRequest
-from proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes as UintPacked
+from mathclips.services.image_to_equation_interface import MLPipelineInterface
+from mathclips.proto.pb_py_classes.ocr_result_pb2 import OCR_Result
+from mathclips.proto.pb_py_classes.train_pb2 import TrainRequest
+from mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes as UintPacked
+from mathclips.services import LOCAL_MODE
+import mathclips
 
-root_path = Path(__file__).parent.parent.resolve()
+mathclips_root_path = Path(mathclips.__path__[0]).resolve()
 pix2tex_root = Path(pix2tex.__path__[0]).resolve()
 
 #cache database clients
 image_db = MathSymbolImageDatabase()
 result_db = MathSymbolResultDatabase(db = image_db.db)
 ml_checkpoints_db = MLCheckpointDatabase(db = image_db.db)
-rmq_connection: pika.connection.Connection = pika.BlockingConnection(get_rmq_connection_parameters())
 
 default_result_config_filename = "default_session_equation_sections.yml"
 
@@ -54,7 +55,7 @@ class ImageFileIdAndLabel:
 
 @dataclass
 class SessionResultConfig:
-    config_path: Path = root_path / "front_end" / "pages" /  default_result_config_filename
+    config_path: Path = mathclips_root_path / "front_end" / "pages" /  default_result_config_filename
     config_data: Dict = field(default_factory = dict)
 
 # TODO - in future iterations this can be either expanded for authenticated sessions, or replaced with a database.
@@ -87,6 +88,7 @@ def equation_result_callback(channel: Channel, method: DeliveryProperties,
                                last_bits = result_message.uid.last_bits))
             }
         }
+    print(f"Updating notebook with the following Configuration mapping:\n{config_data}")
     update_result_config(config_data)
     # TODO - figure out a better way to validate correctness
     record_id: UintPacked = result_db.store_result(
@@ -98,6 +100,8 @@ def equation_result_callback(channel: Channel, method: DeliveryProperties,
         channel.basic_ack(delivery_tag = method.delivery_tag)
 
 def equation_result_listener():
+    rmq_connection: pika.connection.Connection = pika.BlockingConnection(
+            get_rmq_connection_parameters(LOCAL_MODE))
     channel: Channel = rmq_connection.channel()
     channel.queue_declare(queue = IngestQueueNames.RESULT_QUEUE, durable = True)
     print(" [*] Waiting for result messages. CTRL+C to quit.")
@@ -187,6 +191,7 @@ def train_worker(batch: TrainingBatch,
         # load in the default config, and replace settings where appropriate
         # using the original hyperparameters the author designed
         with open(model_dir / "settings" / "config.yaml", 'r') as config_template_file:
+    
             train_config_template = Munch(yaml.safe_load(config_template_file))
 
         # override the default settings
@@ -301,6 +306,8 @@ def train_callback(channel: Channel, method: DeliveryProperties,
         channel.basic_ack(delivery_tag = method.delivery_tag)
 
 def train_message_listener():
+    rmq_connection: pika.connection.Connection = pika.BlockingConnection(
+            get_rmq_connection_parameters(LOCAL_MODE))
     channel: Channel = rmq_connection.channel()
     channel.queue_declare(queue = IngestQueueNames.TRAIN_QUEUE, durable = True)
     print(" [*] Waiting for train request messages. CTRL+C to exit.")
@@ -338,6 +345,15 @@ def test_train_queue_plumbing():
     ml_interface = MLPipelineInterface()
 
 
+def run_train_queue_listeners():
+    train_message_workers = [train_message_worker_factory() for _ in range(NUM_TRAIN_WORKERS)]
+    for worker in train_message_workers:
+        worker.join()
+
+def run_result_queue_listeners():
+    result_message_workers = [equation_result_worker_factory() for _ in range(NUM_RESULT_WORKERS)]
+    for worker in result_message_workers:
+        worker.join()
 
 def main():
     train_message_workers = [train_message_worker_factory() for _ in range(NUM_TRAIN_WORKERS)]

@@ -31,6 +31,12 @@ Signal Processing:
       last_bits: 693416579
     latex: '{\widehat{f}}\left(\xi\right)=\int_{-\infty}^{\infty}f(x)\ e^{-i2\pi\xi
       x}\,d x.'
+  Narrowband Signal:
+    author: Linux User
+    db_id:
+      first_bits: 7358643764714721237
+      last_bits: 1759304080
+    latex: A(t)\cdot\cos[2\pi f t+\varphi(t)]
 Test:
   Angular Velocity:
     author: Lance Sanchez

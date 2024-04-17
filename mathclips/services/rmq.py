@@ -1,22 +1,24 @@
 from __future__ import annotations
 
-from services.logger import logger
-from services import LOCAL_MODE
-
 import pika
 from pika.channel import Channel
 from pika.connection import Connection
 from pika.credentials import PlainCredentials
 from google.protobuf.message import Message
 
+from mathclips.services.logger import logger
+from mathclips.services import LOCAL_MODE, RMQ_DOCKER_IP
 
 def get_rmq_connection_parameters(localmode: bool = False) -> pika.ConnectionParameters:
     if localmode:
-        return pika.ConnectionParameters(host = 'localhost')
+        return pika.ConnectionParameters(host = 'localhost',
+                                         port = 5672,
+                                         credentials = PlainCredentials(username = "admin", password = "admin"))
 
     # TODO - change host to static IP generated in docker-compose
+    print(f"SETTING RABBIT MQ URL TO: {RMQ_DOCKER_IP}")
     return pika.ConnectionParameters(
-        host = 'localhost',
+        host = RMQ_DOCKER_IP,
         port = 5672,
         connection_attempts = 10,
         credentials = PlainCredentials(username = "admin", password = "admin"))

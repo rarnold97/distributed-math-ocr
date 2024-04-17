@@ -15,14 +15,14 @@ from pika.spec import BasicProperties
 from pika.spec import Basic
 from munch import Munch
 
-from services import LOCAL_MODE
-from services.logger import logger
-from services.mongodb import (MathSymbolImageDatabase, MathSymbolResultDatabase, MLCheckpointDatabase)
-from services.rmq import get_rmq_connection_parameters
-from services import IngestQueueNames
-from proto.pb_py_classes.image_pb2 import Image as ImageProto
-from proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes
-from proto.pb_py_classes.ocr_result_pb2 import OCR_Result
+from mathclips.services import LOCAL_MODE
+from mathclips.services.logger import logger
+from mathclips.services.mongodb import (MathSymbolImageDatabase, MathSymbolResultDatabase, MLCheckpointDatabase)
+from mathclips.services.rmq import get_rmq_connection_parameters
+from mathclips.services import IngestQueueNames
+from mathclips.proto.pb_py_classes.image_pb2 import Image as ImageProto
+from mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes
+from mathclips.proto.pb_py_classes.ocr_result_pb2 import OCR_Result
 
 DeliveryProperties: TypeAlias = Basic.Deliver
 # flip to true when debugging during development
@@ -190,6 +190,6 @@ def main(num_workers: int):
         process.join()
 
 if __name__ == "__main__":
-    from services import NUM_ML_PIPELINES
+    from mathclips.services import NUM_ML_PIPELINES
     main(num_workers = NUM_ML_PIPELINES)
     #ml_worker()

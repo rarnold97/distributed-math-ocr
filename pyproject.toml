@@ -12,18 +12,17 @@ readme = ["README.md"]
 keywords = ["math", "mathclips", "latex"]
 
 packages = [
-    {include = "front_end", from = "src"},
-    {include = "proto", from = "src"},
-    {include = "services", from = "src"},
-    {include = "data"},
+    {include = "mathclips"}
 ]
 
 exclude = [
-    "src/proto/*.proto",
-    "src/proto/generate_proto_package.py",
+    "mathclips/proto/*.proto",
+    "mathclips/proto/generate_proto_package.py",
     "data/chrome_images",
     "data/handwritten_extracted_images",
     "data/im2latex"]
+
+include = ["__init__.py"]
 
 [build-system]
 requires = ["poetry-core"]

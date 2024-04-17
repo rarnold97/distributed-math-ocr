@@ -12,7 +12,7 @@ from google.protobuf.internal import builder as _builder
 _sym_db = _symbol_database.Default()
 
 
-import proto.pb_py_classes.uint_packed_bytes_pb2 as uint__packed__bytes__pb2
+import mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 as uint__packed__bytes__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0btrain.proto\x12\x17\x65quation_image_to_latex\x1a\x17uint_packed_bytes.proto\"_\n\x0cTrainRequest\x12<\n\nresult_uid\x18\x01 \x01(\x0b\x32(.equation_image_to_latex.UintPackedBytes\x12\x11\n\tlatex_str\x18\x02 \x01(\tb\x06proto3')

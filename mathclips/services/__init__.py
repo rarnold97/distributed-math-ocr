@@ -13,5 +13,12 @@ NUM_ML_PIPELINES: int = 2
 NUM_RESULT_WORKERS: int = 1
 
 # to enable localhost while debugging, set to True
-LOCAL_MODE: bool = True
-#LOCAL_MODE: bool = False
+#LOCAL_MODE: bool = True
+LOCAL_MODE: bool = False
+
+if LOCAL_MODE:
+    RMQ_DOCKER_IP: str = "localhost"
+    MONGO_DOCKER_IP: str = "localhost"
+else:
+    RMQ_DOCKER_IP: str = "172.16.0.2"
+    MONGO_DOCKER_IP: str = "172.16.0.3"

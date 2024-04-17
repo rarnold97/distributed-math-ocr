@@ -1,0 +1,9 @@
+*.log
+dist/
+.venv
+.git/
+.mypy_cache/
+docker/
+extern/
+TODO.md
+poetry.lock

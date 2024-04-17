@@ -2,7 +2,7 @@ from pathlib import Path
 import struct
 from typing import Dict
 
-from proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes
+from mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes
 import bson
 
 PROJECT_ENDIANNESS = '!' # network big-endian
