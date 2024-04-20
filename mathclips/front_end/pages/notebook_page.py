@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import List, Dict, TypeAlias
-import clipboard
 from pathlib import Path
 import uuid
 import datetime
@@ -12,6 +11,7 @@ import yaml
 import pymongo
 from pymongo.database import Database
 from munch import Munch
+import pyperclip
 
 import mathclips.front_end
 from mathclips.services.rmq import publish_proto_message
@@ -51,7 +51,7 @@ def get_config_file_timestamp(config_filename: Path = default_config_filename):
     return datetime.datetime.fromtimestamp(config_filename.stat().st_mtime)
 
 def on_equation_copy(latex_equation: str):
-    clipboard.copy(latex_equation)
+    pyperclip.copy(latex_equation)
     st.toast(body = f"Successfully Copied: {latex_equation}", icon = "✅")
 
 def on_delete_click(result: OCR_Result, widget_keys: List[IdType]):

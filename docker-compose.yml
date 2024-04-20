@@ -76,6 +76,7 @@ services:
       - 8501:8501
     environment:
       - PYTHONPATH=/opt/project
+      - DISPLAY=:0.0
     volumes:
       - ./mathclips/front_end/app.py:/opt/project/mathclips/front_end/app.py
       - ./mathclips/front_end/pages/notebook_page.py:/opt/project/mathclips/front_end/pages/notebook_page.py

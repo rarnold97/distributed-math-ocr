@@ -12,7 +12,7 @@ required_dependencies = (
     "st-pages",
     "streamlit-extras",
     "pandas",
-    "clipboard",
+    "pyperclip",
     "pyyaml",
     "streamlit-modal",
     "wandb",
