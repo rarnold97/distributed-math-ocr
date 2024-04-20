@@ -6,6 +6,7 @@ from st_pages import Page, show_pages
 from streamlit_extras.app_logo import add_logo
 import pandas as pd
 
+root_dir = Path(__file__).parent.resolve()
 show_pages([
     Page(path = "app.py", name = "Home", icon = "🏠"),
     Page(path = "pages/upload_page.py", name = "Image Upload Tools", icon = "🔨"),
@@ -13,8 +14,7 @@ show_pages([
 
 def add_homepage_logo():
     def get_site_logo_data():
-        script_path = Path(__file__).parent.resolve()
-        logo_path = script_path / "static" / "mathclips_logo.png"
+        logo_path = root_dir / "static" / "mathclips_logo.png"
         with open(logo_path, 'rb') as file:
             data = file.read()
         return base64.b64encode(data).decode()

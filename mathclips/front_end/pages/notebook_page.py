@@ -13,6 +13,7 @@ import pymongo
 from pymongo.database import Database
 from munch import Munch
 
+import mathclips.front_end
 from mathclips.services.rmq import publish_proto_message
 from mathclips.services import IngestQueueNames
 from mathclips.services.ingest import default_result_config_filename
@@ -26,9 +27,13 @@ import mathclips
 
 IdType: TypeAlias = str | int
 
-default_config_filename = Path(mathclips.__path__[0]).resolve() \
-    / "front_end" / "pages" / default_result_config_filename
-st.set_page_config("Math Equation Notebook", page_icon = "static/mathclips_logo_small.png")
+mathclips_root_dir = Path(mathclips.__path__[0]).resolve()
+front_end_dir = mathclips_root_dir / "front_end"
+default_config_filename = mathclips.front_end.notebook_config_path
+print(default_config_filename)
+
+st.set_page_config("Math Equation Notebook",
+                   page_icon = str(front_end_dir / "static" / "mathclips_logo_small.png"))
 
 @st.cache_resource
 def init_mongo_db_connection():

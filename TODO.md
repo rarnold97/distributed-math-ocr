@@ -5,5 +5,6 @@
 - [ ] Make number of ml pipeline workers configurable
 - [ ] Make Training batch size configurable
 - [ ] Training Pipeline has to run twice in order to be successful.  Determin the cause of this!
+- [ ] Update the resizer training pipeline, currently seeing a bug with the dataset length query.
 
 # Frontend

@@ -16,6 +16,7 @@ NUM_RESULT_WORKERS: int = 1
 #LOCAL_MODE: bool = True
 LOCAL_MODE: bool = False
 
+MONGO_PORT = int(27017)
 if LOCAL_MODE:
     RMQ_DOCKER_IP: str = "localhost"
     MONGO_DOCKER_IP: str = "localhost"

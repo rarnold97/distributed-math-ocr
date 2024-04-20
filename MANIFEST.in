@@ -1,0 +1,5 @@
+include mathclips/data/test_images/*.png
+include mathclips/front_end/.streamlit/secrets.toml
+include mathclips/front_end/pages/*.yml
+include mathclips/front_end/static/*.png
+include mathclips/front_end/static/*.svg

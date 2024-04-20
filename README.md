@@ -15,6 +15,49 @@ The target audience of this application is technical professionals and universit
 - professional tool for grant/proposal writing
 - professional collaborative note-taking and documentation tool
 
+# Running the Software
+
+## Docker Compose
+
+Deploying the app with the docker-compose cli is simple, run:
+
+```bash
+docker-compose up
+```
+
+Although, it is recommended to allow the RabbitMQ and MongoDB services fully start up before running the python services. Also, sometimes using run for the backend Python services is more successful.
+You can also try:
+
+```bash
+docker-compose up mongo-express rabbitmq
+...
+docker-compose up frontend
+docker-compose run ingest ml_pipeline
+```
+
+## Manual for Development
+
+To run all of the services locally, I recomend runnning the python modules accordingly.
+
+> NOTE: The Mongo and RabbitMQ services will still be deployed via docker-compose.  The Python services should be ran in separated processes/terminals.
+
+To create a virtual environment, and install all required dependencies within a `.venv` folder, run:
+
+```bash
+python bootstrap.py
+```
+
+Then, you can proceed by running:
+
+```bash
+docker-compose build mongo-express rabbitmq
+docker-compose up mongo-express rabbitmq
+python -m mathclips.services.ingest
+python -m mathclips.services.image_to_equation_interface
+cd mathclips/front_end
+streamlit run app.py
+```
+
 # Architecture
 
 ## Technologies Used

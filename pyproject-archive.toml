@@ -1,0 +1,63 @@
+[tool.poetry]
+name = "mathclips"
+description = "A web/distributed application to convert math equation images to rendered Latex."
+version = "1.0.0"
+
+authors = [
+    "Ryan Arnold <arnold.227@wright.edu>",
+]
+
+readme = ["README.md"]
+
+keywords = ["math", "mathclips", "latex"]
+
+packages = [
+    {include = "mathclips"}
+]
+
+exclude = [
+    "mathclips/proto/*.proto",
+    "mathclips/proto/generate_proto_package.py",
+    "data/chrome_images",
+    "data/handwritten_extracted_images",
+    "data/im2latex"]
+
+include = ["__init__.py"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+pika = "*"
+pymongo = "*"
+pytest = "*"
+pillow = "*"
+protobuf = "*"
+grpcio = "*"
+grpcio-tools = "*"
+numpy = "*"
+streamlit-drawable-canvas = "*"
+streamlit = "*"
+st-pages = "*"
+streamlit-extras = "*"
+uvicorn = "*"
+pandas = "*"
+clipboard = "*"
+pyyaml = "*"
+streamlit-modal = "*"
+wandb = "*"
+munch = "*"
+pix2tex = "*"
+colorama = "*"
+
+[tool.poetry.group.build.dependencies]
+setuptools=">=65.5"
+build = "*"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.1.1"
+
+[tool.poetry.scripts]
+run_frontend = "mathclips.front_end.run_streamlit:main"

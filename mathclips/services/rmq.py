@@ -7,7 +7,7 @@ from pika.credentials import PlainCredentials
 from google.protobuf.message import Message
 
 from mathclips.services.logger import logger
-from mathclips.services import LOCAL_MODE, RMQ_DOCKER_IP
+from mathclips.services import RMQ_DOCKER_IP, LOCAL_MODE
 
 def get_rmq_connection_parameters(localmode: bool = False) -> pika.ConnectionParameters:
     if localmode:
@@ -25,9 +25,9 @@ def get_rmq_connection_parameters(localmode: bool = False) -> pika.ConnectionPar
 
 def publish_proto_message(message: Message, queue_name: str):
     connection: Connection = pika.BlockingConnection(
-        get_rmq_connection_parameters(True))
+        get_rmq_connection_parameters(LOCAL_MODE))
     channel: Channel = connection.channel()
-    channel.queue_declare(queue = queue_name, durable = True)
+    channel.queue_declare(queue = queue_name, durable = True, passive = True)
     channel.basic_publish(
         exchange = '',
         routing_key = queue_name,

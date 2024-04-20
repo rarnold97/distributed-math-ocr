@@ -13,7 +13,7 @@ from pymongo.results import InsertManyResult, InsertOneResult
 import gridfs
 from PIL import Image
 
-from mathclips.services import MONGO_DOCKER_IP
+from mathclips.services import MONGO_DOCKER_IP, MONGO_PORT
 from mathclips.proto.pb_py_classes.image_pb2 import Image as ProtoImage
 from mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes
 from mathclips.services.util import object_id_from_packed, packed_from_object_id
@@ -78,8 +78,7 @@ class MathclipsDatabase:
                  file_storage: Optional[gridfs.GridFS] = None):
 
         if db is None:
-            mongo_port = os.environ.get('MONGO_PORT', int(27017))
-            mongo_url = f"mongodb://{MONGO_DOCKER_IP}:{mongo_port}/"
+            mongo_url = f"mongodb://{MONGO_DOCKER_IP}:{MONGO_PORT}/"
             mongo_client = MongoClient(mongo_url,
                                     username="admin",
                                     password="admin123")

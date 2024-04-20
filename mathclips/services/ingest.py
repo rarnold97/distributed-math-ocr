@@ -23,9 +23,9 @@ from PIL import Image
 from munch import Munch
 DeliveryProperties: TypeAlias = Basic.Deliver
 
+import mathclips.front_end
 from mathclips.services import (MIN_TRAIN_BATCH_SIZE, NUM_TRAIN_WORKERS,
                       NUM_RESULT_WORKERS, IngestQueueNames)
-from mathclips.services.logger import logger
 from mathclips.services.rmq import get_rmq_connection_parameters
 from mathclips.services.util import (object_id_from_packed, packed_from_object_id,
                            find_newest_file, update_nested_dict)
@@ -38,7 +38,6 @@ from mathclips.proto.pb_py_classes.uint_packed_bytes_pb2 import UintPackedBytes 
 from mathclips.services import LOCAL_MODE
 import mathclips
 
-mathclips_root_path = Path(mathclips.__path__[0]).resolve()
 pix2tex_root = Path(pix2tex.__path__[0]).resolve()
 
 #cache database clients
@@ -46,7 +45,7 @@ image_db = MathSymbolImageDatabase()
 result_db = MathSymbolResultDatabase(db = image_db.db)
 ml_checkpoints_db = MLCheckpointDatabase(db = image_db.db)
 
-default_result_config_filename = "default_session_equation_sections.yml"
+default_result_config_filename = mathclips.front_end.notebook_config_path
 
 @dataclass
 class ImageFileIdAndLabel:
@@ -55,7 +54,7 @@ class ImageFileIdAndLabel:
 
 @dataclass
 class SessionResultConfig:
-    config_path: Path = mathclips_root_path / "front_end" / "pages" /  default_result_config_filename
+    config_path: Path = default_result_config_filename
     config_data: Dict = field(default_factory = dict)
 
 # TODO - in future iterations this can be either expanded for authenticated sessions, or replaced with a database.
@@ -73,6 +72,7 @@ def update_result_config(new_data: dict, session_key: str = "default"):
     update_nested_dict(result_config.config_data, new_data)
     with open(result_config.config_path, 'w') as config_file:
         yaml.safe_dump(result_config.config_data, config_file)
+    print(f"SUCCESSFULL UPDATED NOTEBOOK CONFIG AT: {result_config.config_path}")
 
 def equation_result_callback(channel: Channel, method: DeliveryProperties,
                             properties: BasicProperties, body: bytes):
@@ -95,8 +95,8 @@ def equation_result_callback(channel: Channel, method: DeliveryProperties,
         result_message.latex, result_message.input_image_data.uid,
         correct = True)
     if record_id is not None:
-        logger.info("Successfully added ML Pipeline Result to Database!")
-        logger.info("Result Record: ", object_id_from_packed(record_id))
+        print("Successfully added ML Pipeline Result to Database!")
+        print("Result Record: ", object_id_from_packed(record_id))
         channel.basic_ack(delivery_tag = method.delivery_tag)
 
 def equation_result_listener():
@@ -195,15 +195,16 @@ def train_worker(batch: TrainingBatch,
             train_config_template = Munch(yaml.safe_load(config_template_file))
 
         # override the default settings
-        current_batch_size: int = min(64,
-                                  min(len(batch.val_image_file_ids), len(batch.train_image_file_ids)))
+        current_batch_size: int = min(64, len(batch.train_image_file_ids))
         val_batch_size: int = min(64, len(batch.val_latex_labels))
+        assert val_batch_size > 0
         train_config_template.name = MLPipelineInterface.mathclips_weights_name
         train_config_template.batchsize = current_batch_size
         train_config_template.data = str(torch_train_dataset_path)
         train_config_template.valdata = str(torch_val_dataset_path)
         train_config_template.valbatches = val_batch_size
         train_config_template.model_path = str(checkpoints_dir)
+        train_config_template.num_epochs = 10
         if current_checkpoint_path:
             train_config_template.load_chkpt = str(current_checkpoint_path)
         train_config_template.max_width = 512
@@ -236,32 +237,34 @@ def train_worker(batch: TrainingBatch,
             shutil.copy2(new_config_path, MLPipelineInterface.mathclips_config_path)
         shutil.copy2(newest_checkpoint_path, mathclips_weight_path)
 
-        subprocess.run([sys.executable, "-m", "pix2tex.train_resizer",
-                        "--config", MLPipelineInterface.mathclips_config_path,
-                        "--out", mathclips_resizer_path],
-                       stderr = sys.stderr, stdout = sys.stdout, check = True)
-
+        # TODO - Fix pipeline to get resizer to work
+        # subprocess.run([sys.executable, "-m", "pix2tex.train_resizer",
+        #                 "--config", train_config_path,
+        #                 "--out", mathclips_resizer_path],
+        #                stderr = sys.stderr, stdout = sys.stdout, check = True)
+        
         if mathclips_resizer_path.exists():
             shutil.copy2(mathclips_resizer_path, resizer_path)
         shutil.rmtree(batch_run_output_dir, ignore_errors = True)
         train_config_path.unlink(missing_ok = True)
-        logger.info(f"Updated OCR Model weights at: {mathclips_weight_path}")
+        print(f"Updated OCR Model weights at: {mathclips_weight_path}")
 
 def train_callback(channel: Channel, method: DeliveryProperties,
                    properties: BasicProperties, body: bytes):
-
+        print("Processing Training Request ...")
         train_request = TrainRequest.FromString(body)
         result_record: MathEquationResultRecord = result_db.find_one(
             dict(_id = object_id_from_packed(train_request.result_uid)))
         if result_record is None:
-            logger.warning(f"Could not find result record with id message: {train_request.result_uid}")
+            print(f"Could not find result record with id message: {train_request.result_uid}")
             channel.basic_ack(delivery_tag = method.delivery_tag)
             return
         # designate a record for training
-        image_db.collection.update_one(
-            dict(_id = result_record["input_entry_id"]),
+        result = image_db.collection.update_one(
+            dict(file_storage_id = result_record["input_entry_id"]),
             {'$set': dict(train_label = train_request.latex_str, needs_train = True)},
             upsert = False)
+        assert result is not None
 
         # we want enough data for train data + validation data
         # going to use 20% of train batch size, or half the size
@@ -269,6 +272,7 @@ def train_callback(channel: Channel, method: DeliveryProperties,
         # in developer mode, this will require 3 images, with a MIN_TRAIN_BATCH_SIZE of 2
         train_threshold: int = MIN_TRAIN_BATCH_SIZE + validation_size
         num_matches: int = image_db.collection.count_documents(dict(needs_train = True))
+        print("Checking if Training batch is ready ...")
         if num_matches >= train_threshold:
             print("Kicking off a training batch run!")
             records_marked_train_cursor: pymongo.CursorType = image_db.query(dict(needs_train = True))
@@ -302,7 +306,7 @@ def train_callback(channel: Channel, method: DeliveryProperties,
                     update = {'$set': {'needs_train': False}})
             assert many_result is not None and many_result.modified_count == len(query_batch)
             print("Successfully Unmarked Samples for Training!")
-
+        print("Trainig Request Processed!")
         channel.basic_ack(delivery_tag = method.delivery_tag)
 
 def train_message_listener():

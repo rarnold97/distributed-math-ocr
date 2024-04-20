@@ -74,13 +74,19 @@ services:
     working_dir: /opt/project/mathclips/front_end
     ports:
       - 8501:8501
+    environment:
+      - PYTHONPATH=/opt/project
     volumes:
+      - ./mathclips/front_end/app.py:/opt/project/mathclips/front_end/app.py
       - ./mathclips/front_end/pages/notebook_page.py:/opt/project/mathclips/front_end/pages/notebook_page.py
-      - ./mathclips/front_end/pages/default_session_equation_sections.yml:/usr/local/lib/python3.10/site-packages/mathclips/front_end/pages/default_session_equation_sections.yml
+      - ./mathclips/front_end/pages/default_session_equation_sections.yml:/opt/project/mathclips/front_end/pages/default_session_equation_sections.yml
     networks:
       frontend_network:
       backend_network:
-    entrypoint: ["python", "-m", "streamlit", "run", "/opt/project/mathclips/front_end/app.py"]
+    depends_on:
+      - mongo-express
+      - rabbitmq
+    entrypoint: ["python", "-m", "streamlit", "run", "app.py"]
 
   ingest:
     build:
@@ -89,13 +95,21 @@ services:
       target: mathclips-app
     image: mathclips:latest
     container_name: mathclips_ingest_service
+    environment:
+      - PYTHONPATH=/opt/project
     restart: always
     volumes:
-      - .:/opt/project/
-      - ./mathclips/services:/usr/local/lib/python3.10/site-packages/mathclips/services
+      - ./mathclips/services/ingest.py:/opt/project/mathclips/services/ingest.py
+      - ./mathclips/front_end/pages/default_session_equation_sections.yml:/opt/project/mathclips/front_end/pages/default_session_equation_sections.yml
+    # volumes:
+    #   - .:/opt/project/
+    #   - ./mathclips/services:/usr/local/lib/python3.10/site-packages/mathclips/services
     networks:
       backend_network:
-    entrypoint: ["python", "-m", "mathclips.services.ingest"]
+    depends_on:
+      - mongo-express
+      - rabbitmq
+    entrypoint: ["python", "/opt/project/mathclips/services/ingest.py"]
 
   ml_pipeline:
     build:
@@ -104,13 +118,18 @@ services:
       target: mathclips-app
     image: mathclips:latest
     container_name: mathclips_ml_pipeline_service
+    environment:
+      - PYTHONPATH=/opt/project
     restart: always
-    volumes:
-      - .:/opt/project/
-      - ./mathclips/services:/usr/local/lib/python3.10/site-packages/mathclips/services
+    # volumes:
+    #   - .:/opt/project/
+    #   - ./mathclips/services:/usr/local/lib/python3.10/site-packages/mathclips/services
     networks:
       backend_network:
-    entrypoint: ["python", "-m", "mathclips.services.image_to_equation_interface"]
+    depends_on:
+      - mongo-express
+      - rabbitmq
+    entrypoint: ["python", "/opt/project/mathclips/services/image_to_equation_interface.py"]
 
 volumes:
   mathclips_mongo_data:

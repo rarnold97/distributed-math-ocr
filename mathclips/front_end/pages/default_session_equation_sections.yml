@@ -17,6 +17,45 @@ Algebra:
       first_bits: 7358589156019610454
       last_bits: 3466902236
     latex: \gamma\colon\mathbf{e}^{\varepsilon}
+Demo:
+  Circle:
+    author: Mash Burnedead
+    db_id:
+      first_bits: 7359802308595515780
+      last_bits: 2296080149
+    latex: \overline{{{\Delta_{C}^{~}\!\!\!\!}}}^{<}\stackrel{\sim}{\cal D}\stackrel{\otimes}{\sim}\sqrt{\stackrel{\otimes}{\longrightarrow}}~\stackrel{\sim}{\Lambda}^{0\sim}
+  Equation of a Line:
+    author: Izuku Midoriya
+    db_id:
+      first_bits: 7359798301391028612
+      last_bits: 2296080148
+    latex: \bigvee\bigvee\qquad\underline{{{-}}}\ \ I^{Y}\rangle\mathcal{Y}\ +\ \bigcup_{\underline{{{Y}}}}
+  IN-PHASE:
+    author: Master Chief
+    db_id:
+      first_bits: 7359797335023387012
+      last_bits: 2296080147
+    latex: \cos(2\pi f t)\cdot A(t)\cos[\varphi(t)]
+  Pythagorean:
+    author: Kachan Bakugo
+    db_id:
+      first_bits: 7359809897002225721
+      last_bits: 3736692597
+    latex: \begin{array}{r l}{{\displaystyle{\left(\begin{array}{l l}{\quad\quad\quad}&{}&{\quad\dotsb}\\
+      {\quad}&{\;=\;{\vec{\cal Q}}^{\quad}+\sum}\end{array}}}}\end{array}\right.}\end{array}
+  Quadratic:
+    author: Mash Burnedead
+    db_id:
+      first_bits: 7359798537300319047
+      last_bits: 3353044756
+    latex: \Sigma(m)=\Omega m\:\chi(m m)^{\Delta}-m(\bar{1bf x}^{\Delta})=(2m n)^{\Delta}-2(1-2n
+      n)^{\Delta}-2(1-2n)^{\Delta}-2(1-2)^{\Delta}-2(1-2)^{\Delta}-2\tilde{{}},
+  Reflection:
+    author: Yuji Itadori
+    db_id:
+      first_bits: 7359797862990453575
+      last_bits: 3353044755
+    latex: \bigvee\mathcal{}~\longrightarrow~\frac{\sim}{\mathcal{V}}\mathcal{V}
 Signal Processing:
   Euler Identity:
     author: User 1
@@ -43,12 +82,6 @@ Signal Processing:
       first_bits: 7358643764714721237
       last_bits: 1759304080
     latex: A(t)\cdot\cos[2\pi f t+\varphi(t)]
-  Quadrature:
-    author: Docker User
-    db_id:
-      first_bits: 7358724394252145288
-      last_bits: 3967489251
-    latex: \sin(2\pi f t)\cdot A(t)\sin[\varphi(t)]
   Quadrature Component:
     author: Docker User
     db_id:
@@ -61,6 +94,12 @@ Test:
     db_id:
       first_bits: 7358531952799567390
       last_bits: 3203838701
+    latex: '{\boldsymbol{\omega}}={\frac{\mathbf{r}\times\mathbf{v}}{r^{2}}}'
+  Demo:
+    author: Ryan Arnold
+    db_id:
+      first_bits: 7358845630019444436
+      last_bits: 199049738
     latex: '{\boldsymbol{\omega}}={\frac{\mathbf{r}\times\mathbf{v}}{r^{2}}}'
   Moment of Inertia:
     author: Ryan Arnold
